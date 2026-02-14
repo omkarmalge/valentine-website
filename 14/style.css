@@ -1,0 +1,197 @@
+:root{
+	--bg1:#ff9a9e; --bg2:#fecfef; --card:#fff0f6; --accent:#e84855; --muted:#6b4658;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:'Montserrat',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+body{
+	background: linear-gradient(135deg,var(--bg1),var(--bg2));
+	display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.scene{position:relative;width:100%;max-width:900px}
+.card{
+	background:rgba(255,255,255,0.85);
+	border-radius:20px;padding:40px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.12);
+	backdrop-filter: blur(6px);
+	position:relative;overflow:hidden;
+}
+/* decorative love elements in card */
+.card::before{
+	content:'';position:absolute;inset:0;pointer-events:none;
+	background-image: 
+		radial-gradient(circle at 8% 12%, rgba(255,182,193,0.1) 0%, transparent 5%),
+		radial-gradient(circle at 92% 18%, rgba(255,192,203,0.08) 0%, transparent 4%),
+		radial-gradient(circle at 50% 88%, rgba(255,182,193,0.09) 0%, transparent 6%),
+		radial-gradient(circle at 12% 72%, rgba(255,192,203,0.07) 0%, transparent 5%);
+	z-index:0;
+}
+.card > *{position:relative;z-index:1}
+
+h1{margin:0 0 12px;color:var(--accent);font-weight:600;font-size:2rem}
+.heart{width:140px;height:130px;margin:0 auto 18px;transform-origin:center;animation:pulse 1.6s ease-in-out infinite}
+.heart-svg{width:100%;height:100%;fill:var(--accent);filter:drop-shadow(0 6px 12px rgba(232,72,85,0.25))}
+@keyframes pulse{0%{transform:scale(0.96)}50%{transform:scale(1.02)}100%{transform:scale(0.96)}}
+
+#openBtn{background:var(--accent);color:white;border:0;padding:12px 18px;border-radius:12px;font-weight:600;cursor:pointer;font-size:1rem}
+#openBtn:active{transform:translateY(1px)}
+
+.message{margin-top:20px;max-width:620px;margin-left:auto;margin-right:auto}
+.hidden{display:none}
+.small{color:var(--muted);font-size:0.95rem}
+
+#confetti{position:fixed;left:0;top:0;pointer-events:none;width:100%;height:100%;z-index:20}
+
+/* floating hearts (created by JS) */
+.floating-heart{position:fixed;width:34px;height:34px;pointer-events:none;z-index:10;opacity:0.95;transform:translateY(0);}
+.floating-heart svg{width:100%;height:100%;fill:var(--accent)}
+
+@media (max-width:520px){
+	.card{padding:28px;border-radius:16px}
+	.heart{width:110px;height:96px}
+}
+
+/* Entrance animation for the card */
+.card{opacity:0;transform:translateY(12px) scale(.995);animation:card-in 700ms cubic-bezier(.2,.9,.2,1) forwards;position:relative;z-index:5}
+@keyframes card-in{to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Background subtle moving glow */
+body::before{content:"";position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0;
+	background: radial-gradient(circle at 20% 10%, rgba(255,255,255,0.12), transparent 8%), radial-gradient(circle at 80% 90%, rgba(255,200,200,0.08), transparent 12%);
+	mix-blend-mode:screen;opacity:0.95;animation:glowMove 8s ease-in-out infinite alternate}
+@keyframes glowMove{from{transform:translateY(0) scale(1)}to{transform:translateY(-12px) scale(1.02)}}
+
+/* Intensified heartbeat when opened */
+.card.opened .heart{animation:beat-open 1s ease-in-out infinite}
+@keyframes beat-open{0%{transform:scale(1)}25%{transform:scale(1.12)}40%{transform:scale(0.98)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+
+/* Button hover + focus */
+#openBtn{transition:transform .18s ease, box-shadow .18s ease}
+#openBtn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 8px 24px rgba(232,72,85,0.18)}
+#openBtn:focus{outline:none;box-shadow:0 0 0 6px rgba(232,72,85,0.08)}
+
+/* Message fade/slide in */
+.message{opacity:0;transform:translateY(8px)}
+.message.fade-in{animation:message-in 700ms cubic-bezier(.2,.9,.2,1) forwards}
+@keyframes message-in{to{opacity:1;transform:translateY(0)}}
+
+/* Slight rotation for floating hearts */
+.floating-heart{transition:transform 3s ease-out, opacity 1.6s ease-out}
+
+/* Background hearts layer */
+.bg-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg-heart{position:absolute;will-change:transform,opacity;pointer-events:none;opacity:0.85;filter:drop-shadow(0 6px 10px rgba(232,72,85,0.06));}
+.bg-heart svg{width:100%;height:100%;display:block}
+
+/* drift and slow float animations */
+@keyframes bg-drift{0%{transform:translateX(0) translateY(0) rotate(0)}50%{transform:translateX(8px) translateY(-14px) rotate(8deg)}100%{transform:translateX(-6px) translateY(-26px) rotate(-6deg)}}
+@keyframes bg-fade{0%{opacity:0.12}50%{opacity:0.9}100%{opacity:0.2}}
+
+.bg-heart.float{animation: bg-drift 8s ease-in-out infinite, bg-fade 6s ease-in-out infinite}
+
+@media (prefers-reduced-motion: reduce){
+	.bg-heart, .floating-heart{animation: none !important; transition: none !important}
+}
+
+/* decorative background names */
+.bg-name{position:absolute;pointer-events:none;color:rgba(107,47,58,0.06);font-weight:700;font-size:14px;letter-spacing:0.4px;transform-origin:center;white-space:nowrap;text-shadow:0 1px 2px rgba(255,255,255,0.08);filter:blur(0.3px)}
+.bg-name.small{font-size:11px;opacity:0.85}
+.bg-name.floaty{animation: bg-drift 12s ease-in-out infinite alternate;opacity:0.06}
+
+
+/* Notes overlay and card styles */
+.notes-overlay{position:fixed;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06));backdrop-filter: blur(6px);z-index:50;display:flex;align-items:center;justify-content:center;padding:32px}
+.notes-stack{position:relative;width:min(860px,96%);height:min(640px,86%);pointer-events:auto}
+.note-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1);width:92%;max-width:700px;padding:26px 24px;border-radius:14px;background:linear-gradient(180deg,#fff,#fff6f8);box-shadow:0 22px 54px rgba(0,0,0,0.14);cursor:grab;user-select:none;touch-action:none;position:relative;overflow:hidden}
+.note-card::before-deco{
+	content:'';position:absolute;inset:0;pointer-events:none;
+	background-image: 
+		radial-gradient(circle at 5% 8%, rgba(255,182,193,0.06) 0%, transparent 4%),
+		radial-gradient(circle at 95% 12%, rgba(255,192,203,0.05) 0%, transparent 3%),
+		radial-gradient(circle at 48% 95%, rgba(255,182,193,0.05) 0%, transparent 5%);
+	z-index:0;
+}
+.note-card > *{position:relative;z-index:1}
+
+.note-card{--delay:0s;transition:transform .45s cubic-bezier(.2,.9,.2,1),opacity .35s,box-shadow .25s;overflow:hidden}
+.note-card::before{content:"";position:absolute;left:12px;top:12px;width:36px;height:36px;background:linear-gradient(135deg,#ffd6e0,#ffb3c6);border-radius:10px;display:block;box-shadow:0 6px 18px rgba(231,84,105,0.08);mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') center/contain no-repeat}
+.note-card .note-index{opacity:0.9}
+.note-card .note-text{padding-left:56px}
+
+/* prettier background texture */
+.note-card::after{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);background-size:14px 14px;opacity:0.55;pointer-events:none}
+
+/* entrance animation for notes */
+@keyframes note-in{0%{opacity:0;transform:translate(-50%,-34%) scale(.98) rotate(-4deg)}60%{opacity:1;transform:translate(-50%,-52%) scale(1.02) rotate(2deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+.note-card.note-in{animation:note-in 560ms cubic-bezier(.2,.9,.2,1) var(--delay) both}
+
+/* smooth restack transform tweaks */
+.note-card.depth-0{transform:translate(-50%,-54%) rotate(-2deg) scale(1.03)}
+.note-card.depth-1{transform:translate(-50%,-50%) rotate(1.5deg) scale(1)}
+.note-card.depth-2{transform:translate(-50%,-46%) rotate(-1deg) scale(.98)}
+.note-card.removing{transition:transform .6s cubic-bezier(.2,.9,.2,1),opacity .45s}
+
+/* decorative quote styling */
+.note-quote{display:block;margin-top:10px;color:#b76a76;font-size:0.95rem;font-style:italic}
+
+/* note layout (simple and pretty) */
+.note-content{display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 6px}
+.note-text{padding:0;text-align:center;font-size:1.2rem;color:#4a2a36;line-height:1.5}
+.note-quote{margin-top:12px;color:#b76a76;font-size:0.98rem}
+
+/* make restack smoother */
+.note-card{transition:transform .5s cubic-bezier(.2,.9,.2,1),opacity .35s,box-shadow .28s}
+
+
+.note-card:active{cursor:grabbing}
+.note-text{font-size:1.05rem;color:#4a2a36;line-height:1.45}
+.note-quote{display:block;margin-top:10px;color:#8b5566;font-size:0.92rem}
+.note-index{position:absolute;right:12px;top:10px;font-size:0.85rem;color:#b35b6a}
+.note-hint{position:absolute;left:50%;transform:translateX(-50%);bottom:-36px;color:#c76a7a;font-size:0.9rem}
+
+/* small decorative footer inside each note */
+.note-footer{margin-top:14px;color:#c85b6b;font-weight:700;text-align:center;letter-spacing:0.4px}
+
+/* stack transforms for depth */
+.note-card.depth-0{transform:translate(-50%,-50%) translateY(-6px) rotate(-2deg) scale(1.02)}
+.note-card.depth-1{transform:translate(-50%,-50%) translateY(0) rotate(2deg) scale(1)}
+.note-card.depth-2{transform:translate(-50%,-50%) translateY(6px) rotate(-1deg) scale(.98)}
+.note-card.removing{transition:transform .45s cubic-bezier(.2,.9,.2,1),opacity .3s}
+
+@media (max-width:520px){
+	.note-card{padding:18px;width:96%}
+	.notes-stack{height:76%}
+	.note-photo-large{height:120px}
+}
+
+/* Pre-reveal overlay + sparkles */
+.reveal-overlay{position:fixed;inset:0;z-index:120;pointer-events:none;display:block}
+.reveal-overlay .veil{position:absolute;inset:0;background:radial-gradient(ellipse at center, rgba(255,255,255,0.02), rgba(255,200,210,0.06));backdrop-filter: blur(2px);}
+.reveal-sparkle{position:absolute;width:10px;height:10px;border-radius:50%;opacity:0;transform:scale(.2);filter:blur(.6px);will-change:transform,opacity}
+.reveal-sparkle.tiny{width:6px;height:6px}
+.reveal-sparkle::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle,#fff8,#ffd6e0 60%)}
+@keyframes sparkle-pop{0%{opacity:0;transform:scale(.2) translateY(0)}30%{opacity:1;transform:scale(1.05) translateY(-6px)}100%{opacity:0;transform:scale(.8) translateY(-26px)}}
+
+/* heart reveal glow */
+.heart.reveal .heart-svg{filter:drop-shadow(0 12px 32px rgba(232,72,85,0.28));}
+.heart.reveal{animation:reveal-beat 920ms cubic-bezier(.2,.9,.2,1) 3}
+@keyframes reveal-beat{0%{transform:scale(1)}30%{transform:scale(1.22)}60%{transform:scale(.96)}100%{transform:scale(1.06)}}
+
+/* Collage page */
+.collage-overlay{position:fixed;inset:0;background:linear-gradient(135deg,var(--bg1),var(--bg2));z-index:40;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.collage-overlay::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 20%, rgba(255,255,255,0.1), transparent 6%), radial-gradient(circle at 85% 80%, rgba(255,200,200,0.08), transparent 10%);animation:glowMove 10s ease-in-out infinite alternate;z-index:1}
+.collage-container{width:100%;max-width:900px;position:relative;z-index:2}
+.collage-title{text-align:center;color:var(--accent);font-size:2rem;font-weight:600;margin-bottom:28px;opacity:0;animation:fade-in 700ms cubic-bezier(.2,.9,.2,1) 400ms forwards}
+.collage-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:12px;margin-bottom:40px}
+.collage-item{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;box-shadow:0 12px 36px rgba(0,0,0,0.1);background:#fff;cursor:pointer;opacity:0;animation:scale-in 600ms cubic-bezier(.2,.9,.2,1) forwards}
+.collage-item::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg, rgba(255,182,193,0.08), transparent);pointer-events:none;z-index:2}
+.collage-item:nth-child(1){animation-delay:500ms}
+.collage-item:nth-child(2){animation-delay:560ms}
+.collage-item:nth-child(3){animation-delay:620ms}
+.collage-item:nth-child(4){animation-delay:680ms}
+.collage-item:nth-child(5){animation-delay:740ms}
+.collage-item:nth-child(6){animation-delay:800ms}
+.collage-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 300ms ease}
+.collage-item:hover img{transform:scale(1.08)}
+@keyframes scale-in{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.collage-close{text-align:center;color:var(--muted);font-size:0.95rem;margin-top:20px;opacity:0;animation:fade-in 700ms cubic-bezier(.2,.9,.2,1) 900ms forwards}
+
+
